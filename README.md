@@ -7,7 +7,7 @@ Laboratório de Automação e Robótica(LAR)
 Departamento de Engenharia Mecânica
 Universidade de Aveiro
 ```
-# Requesitos
+# Requisitos
 
 * [ROS (Melodic)](http://wiki.ros.org/noetic/Installation/Ubuntu)
 
