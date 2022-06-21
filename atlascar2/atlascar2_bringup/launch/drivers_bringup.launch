@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<launch>
+<!-- args to specify what sensor to launch -->
+    <arg name="2DLidar_left_bringup" default="true"/>
+    <arg name="2DLidar_right_bringup" default="true"/>
+    <arg name="3DLidar_bringup" default="true"/>
+    <arg name="top_camera_right_bringup" default="false"/>
+    <arg name="top_camera_left_bringup" default="false"/>
+    <arg name="front_camera_bringup" default="false"/>
+    <arg name="RGBD_camera_bringup" default="false"/>
+    <arg name="novatel_bringup" default="false"/>
+
+<!--    left 2D laser -->
+   <group if="$(arg 2DLidar_left_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/laser2d_bringup.launch">
+            <arg name="name" value="left" />
+            <arg name="visualize" default="true" />
+        </include>
+   </group>
+
+<!--    right 2D laser -->
+   <group if="$(arg 2DLidar_right_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/laser2d_bringup.launch">
+            <arg name="name" value="right" />
+            <arg name="visualize" default="true" />
+        </include>
+   </group>
+
+<!--    front 3D laser-->
+   <group if="$(arg 3DLidar_bringup)">
+        <group ns="frontal_laser">
+            <include file="$(find atlascar2_bringup)/launch/include/sick_ldmrs_node.launch">
+            </include>
+        </group>
+   </group>
+
+<!--    top left camera -->
+   <group if="$(arg top_camera_left_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/top_cameras_bringup.launch">
+            <arg name="name" value="left" />
+        </include>
+   </group>
+
+<!--    top right camera -->
+   <group if="$(arg top_camera_right_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/top_cameras_bringup.launch">
+            <arg name="name" value="right" />
+        </include>
+   </group>
+
+<!--    front camera -->
+<!--    perguntar se adiciono esta camera ao ficheiro das cameras do telhado, e a RGBD que era top center, de momento ja
+ nao estao no carro-->
+   <group if="$(arg front_camera_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/pointgrey_zebra2.launch">
+            <arg name="camera_name" value="frontal_camera" />
+            <arg name="camera_serial" default="14233704" />
+            <arg name="frame_id" value="frontal_camera" />
+        </include>
+       <node pkg="free_space_detection" type="device_frame_publisher_node" name="device_frame_publisher" required="true" output="screen"/>
+   </group>
+
+<!--    RGBD camera -->
+   <group if="$(arg RGBD_camera_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/asus_xtion.launch">
+            <arg name="camera" value="top_center_rgbd_camera" />
+            <arg name="camera_serial" default="" />
+            <arg name="rgb_frame_id" default="/$(arg cammera_name)_rgb_optical_frame" />
+            <arg name="depth_frame_id" default="/$(arg cammera_name)_depth_optical_frame" />
+        </include>
+   </group>
+
+    <group if="$(arg novatel_bringup)">
+        <include file="$(find atlascar2_bringup)/launch/include/novatel_simple_bringup.launch">
+        </include>
+    </group>
+
+</launch>
